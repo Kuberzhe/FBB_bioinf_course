@@ -5,9 +5,11 @@ import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--fa", type=str, required=True, help="Input fasta file")
+parser.add_argument("--kmer_size", "-k", type=str, required=True, help="kmer size")
+parser.add_argument("--out", type=str, required=True, help="Output file name")
 args = parser.parse_args()
 
-k = 4
+k = int(args.kmer_size)
 kmers = {}
 cur_seq = ''
 
@@ -36,5 +38,5 @@ for i in range(len(cur_seq) - k):
     else:
         kmers[cur_seq_name][cur_seq[i: i + k]] += 1
 
-with open("cnts.json", "w") as out:
+with open(f"{args.out}.json", "w") as out:
     json.dump(kmers, out, indent=3)
