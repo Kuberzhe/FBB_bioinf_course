@@ -1,1 +1,88 @@
+name: 'PR tg notification'
 
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tg_notification:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: setting up python v=3.11...
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: installing requests
+        run: pip install requests
+
+      - name: get changed files
+        # how to get changed files, we will get the list
+        run: |
+          FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | sed 's/^/- /')
+          echo "FILES<<EOF" >> $GITHUB_ENV
+          echo "$FILES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: create tg notification
+        # тут дергаем переменные
+        env:
+          token: ${{ secrets.GITCOURSE_BOT_API }}
+          chat_id: ${{ secrets.GITCOURSE_BOT_CHAT_ID }}
+          PR_user: ${{ github.event.pull_request.user.login }}
+          PR_title: ${{ github.event.pull_request.title }}
+          PR_url: ${{ github.event.pull_request.html_url }}
+          PR_time: ${{ github.event.pull_request.created_at }}
+          repo_name: ${{ github.repository }}
+          changed_files: ${{ env.FILES }}
+          
+        run: |
+          cat << 'EOF' | python -
+          import os
+          import requests
+
+          token = os.environ.get('token')
+          chat_id = os.environ.get('chat_id')
+          pr_user = os.environ.get('PR_user')
+          pr_title = os.environ.get('PR_title')
+          pr_url = os.environ.get('PR_url')
+          pr_time = os.environ.get('PR_time')
+          pr_files = os.environ.get('changed_files')
+          repo_name = os.environ.get('repo_name')
+
+          pr_files = '\n'.join([f'\t-\t {file}' for file in pr_files.split('\n')])
+
+          message = open('hw2/message.txt').read()
+
+          notification = f"""
+          **Запрос на pull-request**
+          **Новый PR от @{pr_user} в репозиторий {repo_name}!**
+          **Название:** `'{pr_title}'`
+          **Дата и время создания:** `{pr_time}`
+          **Ссылка:** [{pr_url}]({pr_url})
+          **Измененные файлы:**
+          {pr_files}
+
+          **Текст в message.txt:**
+          {message}
+          """
+          output = ''
+          for char in notification:
+            if char == '_':
+              output += f'\_'
+            else:
+              output += char
+          payload = {
+            'chat_id': chat_id,
+            'text': output,
+            'parse_mode': 'Markdown'
+          }
+          response = requests.post(f'https://api.telegram.org/bot{token}/sendMessage', json=payload)
+          print(response.text)
+          EOF
