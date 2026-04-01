@@ -61,7 +61,7 @@ jobs:
           message = open('hw2/message.txt').read()
 
           notification = f"""
-          **Запрос на pull-request**
+          **ALERT**
           **Новый PR от @{pr_user} в репозиторий {repo_name}!**
           **Название:** `'{pr_title}'`
           **Дата и время создания:** `{pr_time}`
