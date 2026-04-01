@@ -17,7 +17,9 @@
 
 `python draw_wiki.py -i Roman_Empire.json -o Roman_Empire_graph`
 
-<img width="2250" height="2250" alt="image" src="https://github.com/user-attachments/assets/f0a34930-aa2a-4be9-b8ac-854e1f785aef" />
+Получился такой вот вырвиглазный шедевр
+
+<img width="2250" height="2250" alt="image" src="https://github.com/user-attachments/assets/3f1cf624-1720-4947-b7fa-61a2b903e379" />
 
 
 # Задание 5
