@@ -13,4 +13,4 @@ python wikipedia_articles.py -u https://en.wikipedia.org/wiki/Roman_Empire -d 5 
 
 Результат визуализировали в виде графа с помощью __draw_wiki.py__
 
-![Uploading image.png…]()
+<img width="2250" height="2250" alt="image" src="https://github.com/user-attachments/assets/f0a34930-aa2a-4be9-b8ac-854e1f785aef" />
