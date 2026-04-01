@@ -1,57 +1,57 @@
-#!/Users/macbook/anaconda3/bin/python
-
+#!/usr/bin/python3
+import json
+import random
 import argparse
 import requests
-import random
 from bs4 import BeautifulSoup
-from collections import defaultdict as dd
-import json
+from queue import Queue
+#from collections import defaultdict as dd
 
-# get args
 parser = argparse.ArgumentParser()
-parser.add_argument('-u', '--url')     # start url
-parser.add_argument('-d', '--depth')   # depth of search
-parser.add_argument('-mlp', '--max_links_per_page')   # depth of search
+parser.add_argument('-u', '--url', required=True)     # start article url
+parser.add_argument('-d', '--max_depth', required=True)   # max depth for bfs
+parser.add_argument('-l', '--max_links_per_page', default=100)  
 args = parser.parse_args()
+base = 'https://en.wikipedia.org'
+#headers = {'User-Agent': 'EducationalScraper/1.0 (contact: Liza Fomenko)'}
 
-random.seed(42)
 
-headers = {'User-Agent': 'EducationalScraper/1.0 (contact: Liza Fomenko)'}
-base_url = 'https://en.wikipedia.org'
+def search(start, max_depth = 3):  
+    seen = {start}
+    out = {}
+    q = Queue() 
+    q.append([start, 0]) 
+    while not len(q) == 0:  
+        page, cur_depth = q.popleft()
+        if cur_depth < max_depth:
+            cur_links = find_next_links(page)
+            if len(links) > int(args.max_links_per_page):
+                links = random.sample(links, int(args.max_links_per_page))
+            out[v.split("/")[-1]] = [kega.split("/")[-1] for kega in cur_links]
+            for link in links: 
+                if link not in seen: 
+                    q.append([link, cur_depth + 1])  
+                    seen.add(link)  
+    return out
 
 def find_next_links(url):
-    r = requests.get(f'{base_url}{url}', headers = headers)
-    soup = BeautifulSoup(r.text, 'html.parser')
-    content = soup.find('div', id = 'bodyContent')
-    if content:
-        return [link['href'] for link in content.find_all('a', href = re.compile(r"^(/wiki/)((?!:).)*$"))]
-    return []
+    req = requests.get(f'{base}{url}')#, headers = headers)
+    soup = BeautifulSoup(req.text, 'html.parser')
+    article = soup.find('div', id = 'bodyContent')
+    if len(article) != 0:
+        return [link['href'] for link in article.find_all('a', href = re.compile(r"^(/wiki/)((?!:).)*$"))]
+    else:
+        return []
 
-from collections import deque
-def BFS(v_start, max_depth = 5):  
-    queue = deque() 
-    queue.append([v_start, 0]) 
-    seen = {v_start}
-    output = {}
-    while not len(queue) == 0:  
-        v, curr_d = queue.popleft()
-        if curr_d < max_depth:
-            links = find_next_links(v)
-            if int(args.max_links_per_page) > 0 and len(links) > int(args.max_links_per_page):
-                links = random.sample(links, int(args.max_links_per_page))
-            output[v.split("/")[-1]] = [link.split("/")[-1] for link in links]
-            for m_v in links: 
-                if m_v not in seen: 
-                    queue.append([m_v, curr_d + 1])  
-                    seen.add(m_v)  
-    return output
 
-if base_url in args.url:
-    start_article = args.url.split(base_url)[1]
-else:
-    start_article = args.url
 
-output = BFS(start_article, int(args.depth))   
+start_article = args.url.split(base)[-1]
+#if base in args.url:
+#    start_article = args.url.split(base_url)[1]
+#else:
+#    start_article = args.url
+
+res = BFS(start_article, int(args.depth))   
 
 with open(f'{start_article.split("/")[-1]}.json', 'w') as out:
-    json.dump(output, out, indent=4)
+    json.dump(res, out, indent=4)
