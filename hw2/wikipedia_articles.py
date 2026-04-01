@@ -10,7 +10,7 @@ from collections import defaultdict as dd
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--url', required=True)     # start article url
-parser.add_argument('-d', '--max_depth', required=True)   # max depth for bfs
+parser.add_argument('-d', '--depth', required=True)   # max depth for bfs
 parser.add_argument('-l', '--max_links_per_page', default=100)
 args = parser.parse_args()
 base = 'https://en.wikipedia.org'
@@ -46,7 +46,7 @@ def find_next_links(url):
 
 
 start_article = args.url.split(base)[-1]
-res = search(start_article, int(args.max_depth))
+res = search(start_article, int(args.depth))
 
 with open(f'{start_article.split("/")[-1]}.json', 'w') as out:
     json.dump(res, out, indent=4)
