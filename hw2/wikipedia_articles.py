@@ -51,7 +51,7 @@ start_article = args.url.split(base)[-1]
 #else:
 #    start_article = args.url
 
-res = BFS(start_article, int(args.depth))   
+res = search(start_article, int(args.depth))   
 
 with open(f'{start_article.split("/")[-1]}.json', 'w') as out:
     json.dump(res, out, indent=4)
