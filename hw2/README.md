@@ -12,3 +12,5 @@ python wikipedia_articles.py -u https://en.wikipedia.org/wiki/Roman_Empire -d 5 
 Я не дождался конца работы этого запуска, потому что на depth 5 считает очень долго :(. Поэтому посчитал для --depth 2 -l 10
 
 Результат визуализировали в виде графа с помощью __draw_wiki.py__
+
+![Uploading image.png…]()
