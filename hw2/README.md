@@ -7,13 +7,13 @@
 
 запускаем так
 
-python wikipedia_articles.py -u https://en.wikipedia.org/wiki/Roman_Empire -d 5 -l 7
+'python wikipedia_articles.py -u https://en.wikipedia.org/wiki/Roman_Empire -d 5 -l 7'
 
 Я не дождался конца работы этого запуска, потому что на depth 5 считает очень долго :(. Нооо я в итоге дождался!
 
 Результат визуализировали в виде графа с помощью __draw_wiki.py__
 
-python draw_wiki.py -i Roman_Empire.json -o Roman_Empire_graph
+'python draw_wiki.py -i Roman_Empire.json -o Roman_Empire_graph'
 
 <img width="2250" height="2250" alt="image" src="https://github.com/user-attachments/assets/f0a34930-aa2a-4be9-b8ac-854e1f785aef" />
 
