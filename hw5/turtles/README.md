@@ -5,5 +5,7 @@
 <img width="1909" height="962" alt="image" src="https://github.com/user-attachments/assets/f504b746-9f4b-4f9b-86ca-373efa46efc3" />
 <img width="1918" height="971" alt="image" src="https://github.com/user-attachments/assets/f0250eda-803f-48ed-a931-69060c845312" />
 Обучил линрег и бустинг. Вот такие результаты получились
+
+
 3. Запустил app.py. Получилась вот такая красивая штука. Теперь знаем больше о 19м простом числе
 <img width="1842" height="976" alt="image" src="https://github.com/user-attachments/assets/bf12748b-9714-4c85-8a75-77a1c49d809e" />
